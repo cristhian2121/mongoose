@@ -18,19 +18,35 @@ const Seller = mongoose.model('Seller')
 app.use(express.json());
 
 app.get('/', manageRequest)
+
+// Product
+app.get('/product', (req, res) => {
+    Product.find()
+        .then(doc => res.json(doc))
+        .catch(error => res.json(error))
+})
 app.post('/product', function(req, res) {
     const body = req.body
-    console.log('body: ', body);
     Product.create(body)
         .then((doc => {
-            console.log('doc: ', doc);
-            res.json(doc)
+            return Seller.findById('6106c8e96c0b851eeca3cf99')
+                .then(res => {
+                    if(res) {
+                        console.log('res: ', res);
+                        doc.sellers.push(doc)
+                        return Product.create(doc)
+                    }
+                    return Promise.resolve()
+                })            
         }))
+        .then(doc => res.json(doc))
         .catch(err => {
             console.log('err: ', err);
             res.json(err)
         })
 })
+
+// Seller
 app.post('/seller', function(req, res) {
     const body = req.body
     Seller.create(body)
@@ -42,10 +58,6 @@ app.post('/seller', function(req, res) {
             console.log('err: ', err);
             res.json(err)
         })
-})
-app.get('/', manageRequest)
-app.get('/', (req, res) => {
-    res.send('Ciao')
 })
 
 app.listen(8080, () => console.log('Server run in port 8080'))

@@ -5,6 +5,7 @@ const sellerSchema = new mongoose.Schema({
     name: {
         type: String,
         require: true,
+        minlength: [10, 'Min len 10']
     },
     // product: {
     //     type: mongoose.Schema.Types.ObjectId,

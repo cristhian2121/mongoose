@@ -44,7 +44,13 @@ const productSchema = new mongoose.Schema({
     slug: {
         type: String,
         require: true,
-    }
+    },
+    sellers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Seller',
+        }
+    ]
 })
 
 // Create virtual
@@ -72,7 +78,6 @@ productSchema.post('remove', function(next){
     next()
 })
 productSchema.pre('validate', function(next) {
-    console.log('this.name: ****************', this);
     this.slug = slugify(this.name)
     next()
 })
