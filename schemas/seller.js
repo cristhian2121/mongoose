@@ -7,6 +7,19 @@ const sellerSchema = new mongoose.Schema({
         require: true,
         minlength: [10, 'Min len 10']
     },
+    // Add subdocuments
+    info: [
+        new mongoose.Schema({
+            address: {
+                type: String,
+                required: true
+            },
+            antiguate: {
+                type: Number,
+                required: true
+            }
+        })
+    ]
     // product: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Product',

@@ -22,18 +22,21 @@ app.get('/', manageRequest)
 // Product
 app.get('/product', (req, res) => {
     Product.find()
+        .populate('sellers')
         .then(doc => res.json(doc))
         .catch(error => res.json(error))
 })
+
 app.post('/product', function(req, res) {
     const body = req.body
     Product.create(body)
         .then((doc => {
-            return Seller.findById('6106c8e96c0b851eeca3cf99')
+            // id is put in code to easyly implementation
+            return Seller.findById('6106c8d76c0b851eeca3cf96')
                 .then(res => {
                     if(res) {
                         console.log('res: ', res);
-                        doc.sellers.push(doc)
+                        doc.sellers.push(res._id)
                         return Product.create(doc)
                     }
                     return Promise.resolve()
@@ -46,7 +49,19 @@ app.post('/product', function(req, res) {
         })
 })
 
+app.delete('/product', function(req, res) {
+    Product.remove()
+    .then(doc => res.json(doc))
+    .catch(err => res.json(err))
+})
+
 // Seller
+app.get('/seller', (req, res) => {
+    Seller.find()
+    // .populate('Seller')
+        .then(doc => res.json(doc))
+        .catch(error => res.json(error))
+})
 app.post('/seller', function(req, res) {
     const body = req.body
     Seller.create(body)
